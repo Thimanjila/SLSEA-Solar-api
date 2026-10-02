@@ -10,6 +10,13 @@ NB6007CEM Web API Development coursework implementation.
 - OpenAPI / Swagger
 - ETag + Last-Modified conditional GET
 - Pagination, filtering and sorting
+- Added pagination with limit and offset
+- Added ascending and descending sorting
+- Added time-range filtering
+- Added province, district, and substation filtering
+- Added pagination next/previous links
+- Added ETag conditional GET support
+- Tested HTTP 304 Not Modified responses
 - Seed data generator
 
 ## Run locally
@@ -60,4 +67,3 @@ The final repository should contain incremental commits showing:
 10. district summary
 11. seed data and tests
 12. deployment/documentation
-
