@@ -61,4 +61,3 @@ The final repository should contain incremental commits showing:
 11. seed data and tests
 12. deployment/documentation
 
-AI-generated code must be disclosed in the report appendix according to the coursework brief.
