@@ -5,9 +5,14 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response,
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.api.deps import require_device_for_installation, require_read_access
+from app.api.deps import (
+    get_current_user,
+    require_analyst,
+    require_device_for_installation,
+    require_read_access,
+)
 from app.core.headers import apply_cache_headers, is_not_modified, make_etag
-from app.core.security import get_current_user
+
 from app.db.session import get_db
 from app.models import (
     District,
@@ -66,10 +71,7 @@ def list_installations(
     district_id: int | None = Query(None),
     substation_id: int | None = Query(None),
     db: Session = Depends(get_db),
-    user: User = Security(
-        get_current_user,
-        scopes=["analyst-read-national"],
-    ),
+    user: User = Depends(require_analyst),
 ):
     stmt = select(SolarInstallation)
 
@@ -108,10 +110,7 @@ def get_installation(
     request: Request,
     response: Response,
     db: Session = Depends(get_db),
-    user: User = Security(
-        get_current_user,
-        scopes=["analyst-read-national"],
-    ),
+    user: User = Depends(require_analyst),
 ):
     inst = installation_with_scope(
         db,
@@ -157,10 +156,7 @@ def composite(
     request: Request,
     response: Response,
     db: Session = Depends(get_db),
-    user: User = Security(
-        get_current_user,
-        scopes=["analyst-read-national"],
-    ),
+    user: User = Depends(require_analyst),
 ):
     inst = installation_with_scope(
         db,
@@ -246,10 +242,7 @@ def last_known(
     request: Request,
     response: Response,
     db: Session = Depends(get_db),
-    user: User = Security(
-        get_current_user,
-        scopes=["analyst-read-national"],
-    ),
+    user: User = Depends(require_analyst),
 ):
     installation_with_scope(
         db,
@@ -312,6 +305,20 @@ def last_known(
 @router.get(
     "/installations/{installation_id}/readings",
     response_model=ReadingPage,
+    responses={
+        401: {
+            "description": "Authentication required",
+        },
+        403: {
+            "description": "Forbidden - insufficient scope or outside jurisdiction",
+        },
+        404: {
+            "description": "Installation not found",
+        },
+        422: {
+            "description": "Validation error",
+        },
+    },
 )
 def readings(
     installation_id: int,
@@ -335,10 +342,7 @@ def readings(
     district_id: int | None = None,
     substation_id: int | None = None,
     db: Session = Depends(get_db),
-    user: User = Security(
-        get_current_user,
-        scopes=["analyst-read-national"],
-    ),
+    user: User = Depends(require_analyst),
 ):
     inst = installation_with_scope(
         db,
@@ -498,10 +502,7 @@ def get_reading(
     request: Request,
     response: Response,
     db: Session = Depends(get_db),
-    user: User = Security(
-        get_current_user,
-        scopes=["analyst-read-national"],
-    ),
+    user: User = Depends(require_analyst),
 ):
     installation_with_scope(
         db,
@@ -561,10 +562,7 @@ def get_reading(
 def district_summary(
     district_id: int,
     db: Session = Depends(get_db),
-    user: User = Security(
-        get_current_user,
-        scopes=["analyst-read-national"],
-    ),
+    user: User = Depends(require_analyst),
 ):
     district = db.get(
         District,

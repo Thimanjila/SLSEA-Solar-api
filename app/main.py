@@ -19,12 +19,27 @@ app.add_exception_handler(RequestValidationError, validation_exception_handler)
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     detail = exc.detail
-    if isinstance(detail, dict) and "code" in detail:
-        content = {"error": detail}
-    else:
-        content = {"error": {"code": "HTTP_ERROR", "message": str(detail), "detail": None}}
-    return JSONResponse(status_code=exc.status_code, content=content, headers=exc.headers or {})
 
+    if isinstance(detail, dict) and "code" in detail:
+        error = detail
+    elif exc.status_code == 401 and str(detail) == "Not authenticated":
+        error = {
+            "code": "AUTH_REQUIRED",
+            "message": "Authentication required",
+            "detail": None,
+        }
+    else:
+        error = {
+            "code": "HTTP_ERROR",
+            "message": str(detail),
+            "detail": None,
+        }
+
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": error},
+        headers=exc.headers or {},
+    )
 
 from sqlalchemy.exc import IntegrityError
 app.add_exception_handler(IntegrityError, integrity_exception_handler)
