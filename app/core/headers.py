@@ -12,7 +12,7 @@ def apply_cache_headers(response: Response, etag: str, last_modified: datetime):
     response.headers["Last-Modified"] = last_modified.astimezone(timezone.utc).strftime(
         "%a, %d %b %Y %H:%M:%S GMT"
     )
-    response.headers["Content-Type"] = "application/json"
+
 
 def is_not_modified(request: Request, etag: str, last_modified: datetime) -> bool:
     inm = request.headers.get("If-None-Match")
