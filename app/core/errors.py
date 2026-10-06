@@ -7,7 +7,7 @@ def error_body(code, message, detail=None):
     return {"error": {"code": code, "message": message, "detail": detail}}
 
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    return JSONResponse(status_code=400, content=error_body("VALIDATION_ERROR", "Request validation failed", str(exc)))
+    return JSONResponse(status_code=422, content=error_body("VALIDATION_ERROR", "Request validation failed", str(exc)))
 
 async def integrity_exception_handler(request: Request, exc: IntegrityError):
     return JSONResponse(status_code=400, content=error_body("INTEGRITY_ERROR", "Request conflicts with stored data", str(exc.orig)))
