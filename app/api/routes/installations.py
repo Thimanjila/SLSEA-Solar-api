@@ -409,20 +409,52 @@ def readings(
         .limit(limit)
     ).all()
 
+    # UPDATED PAGINATION LINKS
+    # Preserve all active filters in next/previous links.
+    query_params = [
+        f"limit={limit}",
+        f"sort={sort}",
+    ]
+
+    if from_time is not None:
+        query_params.append(
+            f"from_time={from_time.isoformat()}"
+        )
+
+    if to_time is not None:
+        query_params.append(
+            f"to_time={to_time.isoformat()}"
+        )
+
+    if province_id is not None:
+        query_params.append(
+            f"province_id={province_id}"
+        )
+
+    if district_id is not None:
+        query_params.append(
+            f"district_id={district_id}"
+        )
+
+    if substation_id is not None:
+        query_params.append(
+            f"substation_id={substation_id}"
+        )
+
     next_link = (
-        f"/api/v1/installations/{installation_id}/readings"
-        f"?limit={limit}"
-        f"&offset={offset + limit}"
-        f"&sort={sort}"
+        f"/api/v1/installations/{installation_id}/readings?"
+        + "&".join(
+            query_params + [f"offset={offset + limit}"]
+        )
         if offset + limit < total
         else None
     )
 
     previous_link = (
-        f"/api/v1/installations/{installation_id}/readings"
-        f"?limit={limit}"
-        f"&offset={max(0, offset - limit)}"
-        f"&sort={sort}"
+        f"/api/v1/installations/{installation_id}/readings?"
+        + "&".join(
+            query_params + [f"offset={max(0, offset - limit)}"]
+        )
         if offset > 0
         else None
     )
