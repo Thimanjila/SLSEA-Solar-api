@@ -35,9 +35,6 @@ Open:
 - http://127.0.0.1:8000/openapi.json
 - http://127.0.0.1:8000/health
 
-## Demo accounts after seeding
-
-The seed script prints generated credentials. Do not use these credentials in the final public deployment documentation.
 
 ## Main resources
 
