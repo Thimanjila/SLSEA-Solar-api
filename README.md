@@ -3,7 +3,7 @@
 NB6007CEM Web API Development coursework implementation.
 
 ## Stack
-- FastAPI
+
 - SQLAlchemy
 - PostgreSQL in deployment / SQLite for quick local development
 - JWT bearer authentication with scopes
@@ -52,18 +52,3 @@ The seed script prints generated credentials. Do not use these credentials in th
 - /api/v1/districts/{district_id}/generation-summary
 - /api/v1/auth/token
 
-## Important coursework evidence
-
-The final repository should contain incremental commits showing:
-1. project bootstrap
-2. data model
-3. hierarchy read path
-4. installation/composite/last-known resources
-5. ingestion
-6. pagination/filtering/sorting
-7. conditional GET
-8. error contract
-9. JWT/scopes/jurisdiction enforcement
-10. district summary
-11. seed data and tests
-12. deployment/documentation
