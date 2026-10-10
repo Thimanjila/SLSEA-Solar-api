@@ -7,7 +7,7 @@ NB6007CEM Web API Development coursework implementation.
 - SQLAlchemy
 - PostgreSQL in deployment / SQLite for quick local development
 - JWT bearer authentication with scopes
-- OpenAPI / Swagger
+- Render/OpenAPI / Swagger
 - ETag + Last-Modified conditional GET
 - Pagination, filtering and sorting
 - Added pagination with limit and offset
@@ -30,10 +30,7 @@ python seed.py
 uvicorn app.main:app --reload
 ```
 
-Open:
-- http://127.0.0.1:8000/docs
-- http://127.0.0.1:8000/openapi.json
-- http://127.0.0.1:8000/health
+
 
 
 ## Main resources
